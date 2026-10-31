@@ -3,32 +3,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fight  Karo | The Arena Awaits</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <meta name="theme-color" content="#171717">
+    <meta name="description" content="FightKaro — Enter the arena, choose your fighter and fight!">
+
+    <title>FightKaro | The Arena Awaits</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
+    <div class="page-background"></div>
+
     <main class="menu">
 
-        <h1>FIGHTKARO</h1>
-        <p class="subtitle">THE ARENA AWAITS</p>
+        <header class="brand">
+            <p class="brand-tag">DESI ARCADE • EST. 2026</p>
+            <h1>FIGHT<span>KARO</span></h1>
+            <p class="subtitle">THE ARENA AWAITS</p>
+        </header>
 
         <section class="menu-box">
-            <h2>MAIN MENU</h2>
 
-            <button id="play">PLAY GAME</button>
-            <button id="help">HOW TO PLAY</button>
-            <button id="about">ABOUT</button>
+            <div class="section-heading">
+                <span class="heading-line"></span>
+                <h2>MAIN MENU</h2>
+                <span class="heading-line"></span>
+            </div>
+
+            <div class="menu-buttons">
+                <button id="play" class="menu-button primary">
+                    <span class="button-icon">⚔</span>
+                    <span>PLAY GAME</span>
+                    <span class="button-arrow">›</span>
+                </button>
+
+                <button id="help" class="menu-button">
+                    <span class="button-icon">?</span>
+                    <span>HOW TO PLAY</span>
+                    <span class="button-arrow">›</span>
+                </button>
+
+                <button id="about" class="menu-button">
+                    <span class="button-icon">✦</span>
+                    <span>ABOUT</span>
+                    <span class="button-arrow">›</span>
+                </button>
+            </div>
 
         </section>
 
-        <p id="message">Select an option to continue.</p>
-        <p class="footer">A 2D Fighting Game Project</p>
+        <p id="message" aria-live="polite">
+            Select an option to continue.
+        </p>
+
+        <footer class="footer">
+            <span>MADE WITH PASSION</span>
+            <span class="footer-divider">•</span>
+            <span>A 2D FIGHTING GAME PROJECT</span>
+        </footer>
 
     </main>
-<div id="game-container"></div>  
-<script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
-<script src="game.js"></script>
+
+    <div id="game-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
+    <script src="game.js"></script>
+
 </body>
 </html>
