@@ -6,38 +6,17 @@ let game = null;
 // ======================================
 
 const characters = [
-    {
-        name: "Narendra Modi",
-        shortName: "MODI",
-        color: 0xF39C12,
-        cssColor: "#F39C12"
-    },
-    {
-        name: "Rahul Gandhi",
-        shortName: "RAHUL",
-        color: 0x3498DB,
-        cssColor: "#3498DB"
-    },
-    {
-        name: "Arvind Kejriwal",
-        shortName: "KEJRIWAL",
-        color: 0x2ECC71,
-        cssColor: "#2ECC71"
-    },
-    {
-        name: "Mamata Banerjee",
-        shortName: "MAMATA",
-        color: 0x9B59B6,
-        cssColor: "#9B59B6"
-    }
+    { name: "Narendra Modi", shortName: "MODI", color: 0xF39C12, cssColor: "#F39C12" },
+    { name: "Rahul Gandhi", shortName: "RAHUL", color: 0x3498DB, cssColor: "#3498DB" },
+    { name: "Arvind Kejriwal", shortName: "KEJRIWAL", color: 0x2ECC71, cssColor: "#2ECC71" },
+    { name: "Mamata Banerjee", shortName: "MAMATA", color: 0x9B59B6, cssColor: "#9B59B6" }
 ];
 
 let selectedPlayer = characters[0];
 let selectedOpponent = characters[1];
 
-
 // ======================================
-// FIGHTKARO DIALOGUE DATABASE
+// DIALOGUE DATABASE
 // ======================================
 
 const dialogueBank = {
@@ -80,11 +59,10 @@ const dialogueBank = {
 
 function getRandomDialogue(category) {
     const lines = dialogueBank[category];
-    if (!lines || lines.length === 0) return "";
-    const randomIndex = Math.floor(Math.random() * lines.length);
-    return lines[randomIndex];
-}
+    if (!lines || !lines.length) return "";
 
+    return lines[Math.floor(Math.random() * lines.length)];
+}
 
 // ======================================
 // SOUND SYSTEM
@@ -94,26 +72,21 @@ let audioContext = null;
 let masterVolume = 0.12;
 
 function initializeAudio() {
-
     if (!audioContext) {
-
         const AudioContextClass =
             window.AudioContext || window.webkitAudioContext;
 
         if (AudioContextClass) {
             audioContext = new AudioContextClass();
         }
-
     }
 
     if (audioContext && audioContext.state === "suspended") {
         audioContext.resume();
     }
-
 }
 
 function playTone(frequency, duration, type = "sine", volume = 0.5) {
-
     if (!audioContext) return;
 
     const oscillator = audioContext.createOscillator();
@@ -141,15 +114,12 @@ function playTone(frequency, duration, type = "sine", volume = 0.5) {
 
     oscillator.start();
     oscillator.stop(audioContext.currentTime + duration);
-
 }
 
 function playSound(sound) {
-
     if (!audioContext) return;
 
     switch (sound) {
-
         case "click":
             playTone(600, 0.08, "square", 0.35);
             break;
@@ -180,11 +150,8 @@ function playSound(sound) {
             playTone(350, 0.25, "triangle", 0.5);
             setTimeout(() => playTone(260, 0.35, "triangle", 0.5), 220);
             break;
-
     }
-
 }
-
 
 // ======================================
 // MENU ELEMENTS
@@ -196,96 +163,13 @@ const aboutButton = document.getElementById("about");
 const message = document.getElementById("message");
 
 // ======================================
-// FULLSCREEN MENU BACKGROUND
-// ======================================
-
-const menuArtworkStyle = document.createElement("style");
-
-menuArtworkStyle.textContent = `
-    html,
-    body {
-        width: 100%;
-        min-height: 100%;
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
-    }
-
-    .menu {
-        position: fixed;
-        inset: 0;
-        z-index: 10;
-
-        width: 100vw;
-        height: 100vh;
-        min-height: 100vh;
-        max-width: none;
-
-        margin: 0;
-        padding: 30px 20px;
-        box-sizing: border-box;
-        border-radius: 0;
-
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        background-color: #171923;
-        background-image:
-            linear-gradient(
-                90deg,
-                rgba(15, 17, 28, 0.88),
-                rgba(15, 17, 28, 0.40)
-            ),
-            url("assets/modi-gauntlet.png");
-
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-
-    .menu h1,
-    .menu p,
-    .menu button {
-        position: relative;
-        z-index: 2;
-    }
-
-    .menu h1 {
-        font-size: clamp(38px, 6vw, 72px);
-    }
-
-    .menu button {
-        max-width: 450px;
-        width: min(90vw, 450px);
-    }
-
-    #game-container {
-        width: 100%;
-        max-width: 100%;
-    }
-
-    @media (max-width: 600px) {
-        .menu {
-            padding: 20px 12px;
-            background-position: 58% center;
-        }
-    }
-`;
-
-document.head.appendChild(menuArtworkStyle);
-
-// ======================================
-// CHARACTER SELECTION SCREEN
+// CHARACTER SELECTION
 // ======================================
 
 function createCharacterSelection() {
-
     if (document.getElementById("character-select")) return;
 
     const selection = document.createElement("div");
-
     selection.id = "character-select";
 
     selection.style.cssText = `
@@ -297,14 +181,15 @@ function createCharacterSelection() {
         justify-content: center;
         align-items: center;
         padding: 20px;
+        overflow-y: auto;
         font-family: Arial, sans-serif;
         color: white;
     `;
 
     selection.innerHTML = `
         <div style="
-            background: #202638;
-            border: 2px solid #F5C542;
+            background: #222321;
+            border: 2px solid #ff9933;
             border-radius: 15px;
             padding: 25px;
             width: 100%;
@@ -312,71 +197,71 @@ function createCharacterSelection() {
             text-align: center;
         ">
 
-            <h1 style="color:#F5C542;">CHOOSE YOUR FIGHTERS</h1>
+            <h1 style="color:#ff9933; font-size:clamp(25px,5vw,38px);">
+                CHOOSE YOUR FIGHTERS
+            </h1>
 
             <p>Choose your character and your opponent.</p>
 
             <div style="
-                display: flex;
-                flex-wrap: wrap;
-                gap: 20px;
-                justify-content: center;
-                margin: 25px 0;
+                display:flex;
+                flex-wrap:wrap;
+                gap:20px;
+                justify-content:center;
+                margin:25px 0;
             ">
 
-                <div style="flex:1; min-width:200px;">
-                    <h3 style="color:#55D6FF;">PLAYER</h3>
+                <div style="flex:1; min-width:180px;">
+                    <h3 style="color:#39c6b2;">PLAYER</h3>
 
                     <select id="player-choice" style="
                         width:100%;
                         padding:12px;
-                        background:#171923;
+                        background:#171717;
                         color:white;
-                        border:1px solid #55D6FF;
+                        border:1px solid #39c6b2;
                         border-radius:7px;
                         font-size:16px;
-                    ">
-                    </select>
+                    "></select>
 
                     <div id="player-preview" style="
                         margin-top:15px;
                         padding:20px;
                         border-radius:10px;
-                        background:#171923;
+                        background:#171717;
                     "></div>
                 </div>
 
-                <div style="flex:1; min-width:200px;">
-                    <h3 style="color:#FF7777;">OPPONENT</h3>
+                <div style="flex:1; min-width:180px;">
+                    <h3 style="color:#ff9933;">OPPONENT</h3>
 
                     <select id="opponent-choice" style="
                         width:100%;
                         padding:12px;
-                        background:#171923;
+                        background:#171717;
                         color:white;
-                        border:1px solid #FF7777;
+                        border:1px solid #ff9933;
                         border-radius:7px;
                         font-size:16px;
-                    ">
-                    </select>
+                    "></select>
 
                     <div id="opponent-preview" style="
                         margin-top:15px;
                         padding:20px;
                         border-radius:10px;
-                        background:#171923;
+                        background:#171717;
                     "></div>
                 </div>
 
             </div>
 
             <button id="start-fight" style="
-                background:#F5C542;
-                color:#171923;
+                background:#ff9933;
+                color:#171717;
                 border:none;
-                padding:14px 35px;
+                padding:14px 25px;
                 border-radius:8px;
-                font-size:18px;
+                font-size:17px;
                 font-weight:bold;
                 cursor:pointer;
                 margin:8px;
@@ -398,11 +283,10 @@ function createCharacterSelection() {
 
     document.body.appendChild(selection);
 
-    const playerSelect = document.getElementById("player-choice");
-    const opponentSelect = document.getElementById("opponent-choice");
+    const playerSelect = selection.querySelector("#player-choice");
+    const opponentSelect = selection.querySelector("#opponent-choice");
 
     characters.forEach((character, index) => {
-
         const playerOption = document.createElement("option");
         playerOption.value = index;
         playerOption.textContent = character.name;
@@ -412,14 +296,12 @@ function createCharacterSelection() {
         opponentOption.value = index;
         opponentOption.textContent = character.name;
         opponentSelect.appendChild(opponentOption);
-
     });
 
     playerSelect.value = "0";
     opponentSelect.value = "1";
 
     function updatePreview() {
-
         selectedPlayer = characters[Number(playerSelect.value)];
         selectedOpponent = characters[Number(opponentSelect.value)];
 
@@ -448,7 +330,6 @@ function createCharacterSelection() {
             <h3>${selectedOpponent.shortName}</h3>
             <p>${selectedOpponent.name}</p>
         `;
-
     }
 
     playerSelect.addEventListener("change", updatePreview);
@@ -456,11 +337,9 @@ function createCharacterSelection() {
 
     updatePreview();
 
-
     // START FIGHT
 
-    document.getElementById("start-fight").addEventListener("click", function () {
-
+    document.getElementById("start-fight").addEventListener("click", () => {
         initializeAudio();
         playSound("click");
 
@@ -468,37 +347,30 @@ function createCharacterSelection() {
         selectedOpponent = characters[Number(opponentSelect.value)];
 
         selection.style.display = "none";
-
         document.getElementById("game-container").style.display = "block";
 
         if (game === null) {
             game = new Phaser.Game(config);
+        } else {
+            game.scene.start("ArenaScene");
         }
-
     });
-
 
     // BACK TO MENU
 
-    document.getElementById("back-menu").addEventListener("click", function () {
-
+    document.getElementById("back-menu").addEventListener("click", () => {
         playSound("click");
 
         selection.style.display = "none";
-
-        document.querySelector(".menu").style.display = "block";
-
+        document.querySelector(".menu").style.display = "flex";
     });
-
 }
-
 
 // ======================================
 // MENU BUTTONS
 // ======================================
 
-playButton.addEventListener("click", function () {
-
+playButton.addEventListener("click", () => {
     initializeAudio();
     playSound("click");
 
@@ -507,33 +379,26 @@ playButton.addEventListener("click", function () {
     createCharacterSelection();
 
     document.getElementById("character-select").style.display = "flex";
-
 });
 
-helpButton.addEventListener("click", function () {
-
+helpButton.addEventListener("click", () => {
     initializeAudio();
     playSound("click");
 
     message.textContent =
-        "A/D: Move | W/SPACE: Jump | S: Block | J: Punch | K: Kick";
-
+        "A/D or arrows: Move | W/SPACE: Jump | S: Block | J: Punch | K: Kick";
 });
 
-aboutButton.addEventListener("click", function () {
-
+aboutButton.addEventListener("click", () => {
     initializeAudio();
     playSound("click");
 
     message.textContent =
         "FightKaro is my first 2D political fighting game project!";
-
 });
 
-
 // ======================================
-// PIXEL-ART FIGHTER ART
-// Generated in Phaser so no external image files are needed.
+// PIXEL-ART FIGHTER TEXTURE
 // ======================================
 
 function createFighterTexture(scene, character, textureKey) {
@@ -542,86 +407,108 @@ function createFighterTexture(scene, character, textureKey) {
     }
 
     const g = scene.make.graphics({ x: 0, y: 0, add: false });
+
     const outfit = character.color;
     const skin = 0xE8B58D;
     const dark = 0x25202A;
     const light = 0xF3EBDD;
 
-    // Pixel-art shadow and shoes
+    // Shadow and shoes
+
     g.fillStyle(0x171923, 0.35);
     g.fillRect(13, 86, 39, 5);
+
     g.fillStyle(dark);
     g.fillRect(16, 79, 13, 8);
     g.fillRect(38, 79, 13, 8);
 
-    // Legs and outfit
+    // Legs
+
     g.fillStyle(outfit);
     g.fillRect(18, 57, 13, 24);
     g.fillRect(36, 57, 13, 24);
+
     g.fillStyle(0x202638);
     g.fillRect(17, 77, 14, 5);
     g.fillRect(36, 77, 14, 5);
 
-    // Torso, shoulders and arms
+    // Torso and arms
+
     g.fillStyle(outfit);
     g.fillRect(14, 31, 39, 32);
     g.fillRect(9, 35, 10, 21);
     g.fillRect(48, 35, 10, 21);
+
     g.fillStyle(light);
     g.fillRect(29, 33, 8, 27);
+
     g.fillStyle(skin);
     g.fillRect(8, 25, 11, 12);
     g.fillRect(48, 25, 11, 12);
 
     // Neck and face
+
     g.fillStyle(skin);
     g.fillRect(27, 23, 13, 12);
     g.fillRect(22, 7, 25, 23);
     g.fillRect(19, 14, 4, 10);
     g.fillRect(46, 14, 4, 10);
 
-    // Hair / headwear varies by fighter
+    // Hair and headwear
+
     g.fillStyle(dark);
+
     if (character.shortName === "MODI") {
         g.fillRect(22, 5, 25, 6);
         g.fillRect(20, 10, 5, 8);
         g.fillRect(44, 10, 5, 6);
+
         g.fillStyle(0xD9D9D9);
         g.fillRect(24, 24, 21, 4);
         g.fillRect(27, 28, 15, 3);
+
     } else if (character.shortName === "KEJRIWAL") {
         g.fillRect(21, 5, 27, 5);
         g.fillRect(20, 10, 5, 5);
         g.fillRect(45, 10, 5, 5);
+
         g.fillStyle(0xFFFFFF);
         g.fillRect(20, 2, 29, 7);
+
         g.fillStyle(0x246BCE);
         g.fillRect(31, 4, 7, 2);
+
         g.fillStyle(dark);
         g.fillRect(25, 22, 5, 2);
         g.fillRect(39, 22, 5, 2);
+
     } else if (character.shortName === "MAMATA") {
         g.fillRect(20, 5, 29, 8);
         g.fillRect(20, 9, 5, 15);
         g.fillRect(44, 9, 5, 15);
+
         g.fillStyle(0xFFFFFF);
         g.fillRect(14, 39, 8, 22);
         g.fillRect(45, 39, 8, 22);
+
         g.fillStyle(0xD94C8A);
         g.fillRect(29, 33, 8, 27);
+
     } else {
         g.fillRect(21, 5, 28, 8);
         g.fillRect(21, 9, 5, 7);
         g.fillRect(44, 9, 5, 7);
     }
 
-    // Eyes and simple pixel details
+    // Eyes and face details
+
     g.fillStyle(dark);
     g.fillRect(27, 17, 4, 3);
     g.fillRect(39, 17, 4, 3);
     g.fillRect(32, 24, 7, 2);
 
     // Gloves
+
     g.fillStyle(0xF5C542);
     g.fillRect(7, 23, 12, 7);
     g.fillRect(48, 23, 12, 7);
@@ -632,13 +519,15 @@ function createFighterTexture(scene, character, textureKey) {
 
 function addFighterSprite(scene, character, x, y, textureKey) {
     createFighterTexture(scene, character, textureKey);
+
     const sprite = scene.add.sprite(x, y, textureKey);
+
     sprite.setOrigin(0.5, 1);
     sprite.setDepth(5);
     sprite.setScale(1.15);
+
     return sprite;
 }
-
 
 // ======================================
 // ARENA SCENE
@@ -650,9 +539,7 @@ class ArenaScene extends Phaser.Scene {
         super("ArenaScene");
     }
 
-
     create() {
-
         this.gameOver = false;
         this.isPaused = false;
 
@@ -668,6 +555,13 @@ class ArenaScene extends Phaser.Scene {
         this.playerKnockbackUntil = 0;
         this.opponentKnockbackUntil = 0;
 
+        // TOUCH INPUT STATE
+
+        this.touchState = {
+            left: false,
+            right: false,
+            block: false
+        };
 
         // GROUND
 
@@ -677,17 +571,10 @@ class ArenaScene extends Phaser.Scene {
 
         this.physics.add.existing(this.ground, true);
 
-
         // ARENA DECORATION
 
-        this.add.rectangle(
-            400, 350, 800, 5, 0xF5C542
-        );
-
-        this.add.rectangle(
-            400, 450, 800, 5, 0xF5C542
-        );
-
+        this.add.rectangle(400, 350, 800, 5, 0xF5C542);
+        this.add.rectangle(400, 450, 800, 5, 0xF5C542);
 
         // PLAYER
 
@@ -696,16 +583,19 @@ class ArenaScene extends Phaser.Scene {
         );
 
         this.physics.add.existing(this.player);
-
         this.player.body.setCollideWorldBounds(true);
 
         this.physics.add.collider(this.player, this.ground);
 
         this.player.setAlpha(0);
-        this.playerSprite = addFighterSprite(
-            this, selectedPlayer, this.player.x, this.player.y + 60, "player-fighter"
-        );
 
+        this.playerSprite = addFighterSprite(
+            this,
+            selectedPlayer,
+            this.player.x,
+            this.player.y + 60,
+            "player-fighter"
+        );
 
         // OPPONENT
 
@@ -714,19 +604,23 @@ class ArenaScene extends Phaser.Scene {
         );
 
         this.physics.add.existing(this.opponent);
-
         this.opponent.body.setCollideWorldBounds(true);
 
         this.physics.add.collider(this.opponent, this.ground);
 
         this.opponent.setAlpha(0);
+
         this.opponentSprite = addFighterSprite(
-            this, selectedOpponent, this.opponent.x, this.opponent.y + 60, "opponent-fighter"
+            this,
+            selectedOpponent,
+            this.opponent.x,
+            this.opponent.y + 60,
+            "opponent-fighter"
         );
+
         this.opponentSprite.setFlipX(true);
 
         this.physics.add.collider(this.player, this.opponent);
-
 
         // CHARACTER NAME LABELS
 
@@ -750,8 +644,7 @@ class ArenaScene extends Phaser.Scene {
             }
         ).setOrigin(0.5);
 
-
-        // SPEECH BUBBLES
+        // DIALOGUE
 
         const dialogueStyle = {
             fontSize: "14px",
@@ -763,35 +656,37 @@ class ArenaScene extends Phaser.Scene {
             wordWrap: { width: 190 }
         };
 
-        this.playerDialogueText = this.add.text(200, 170, "", dialogueStyle)
-            .setOrigin(0.5).setDepth(20).setVisible(false);
+        this.playerDialogueText = this.add.text(
+            200, 170, "", dialogueStyle
+        ).setOrigin(0.5).setDepth(20).setVisible(false);
 
-        this.opponentDialogueText = this.add.text(600, 170, "", dialogueStyle)
-            .setOrigin(0.5).setDepth(20).setVisible(false);
+        this.opponentDialogueText = this.add.text(
+            600, 170, "", dialogueStyle
+        ).setOrigin(0.5).setDepth(20).setVisible(false);
 
         this.playerDialogueTimer = null;
         this.opponentDialogueTimer = null;
+
         this.playerLowHealthSpoken = false;
         this.opponentLowHealthSpoken = false;
 
         this.showDialogue("player", "intro");
         this.showDialogue("opponent", "intro");
 
-
         // KEYBOARD CONTROLS
 
         this.keys = this.input.keyboard.addKeys("A,D,S");
-
         this.cursors = this.input.keyboard.createCursorKeys();
-
         this.jumpKeys = this.input.keyboard.addKeys("W,SPACE");
-
         this.attackKeys = this.input.keyboard.addKeys("J,K");
 
         this.restartKey = this.input.keyboard.addKey(
             Phaser.Input.Keyboard.KeyCodes.R
         );
 
+        // MOBILE CONTROLS
+
+        this.createTouchControls();
 
         // GAME TITLE
 
@@ -805,9 +700,6 @@ class ArenaScene extends Phaser.Scene {
             }
         ).setOrigin(0.5);
 
-
-        // ROUND DISPLAY
-
         this.add.text(
             400, 55,
             "ROUND 1",
@@ -817,7 +709,6 @@ class ArenaScene extends Phaser.Scene {
             }
         ).setOrigin(0.5);
 
-
         // PLAYER HEALTH BAR
 
         this.add.text(20, 78, "PLAYER", {
@@ -826,16 +717,13 @@ class ArenaScene extends Phaser.Scene {
             fontStyle: "bold"
         });
 
-        this.add.rectangle(
-            110, 110, 180, 18, 0x555555
-        );
+        this.add.rectangle(110, 110, 180, 18, 0x555555);
 
         this.playerHealthBar = this.add.rectangle(
             20, 110, 180, 18, 0x2ECC71
         );
 
         this.playerHealthBar.setOrigin(0, 0.5);
-
 
         // OPPONENT HEALTH BAR
 
@@ -845,16 +733,13 @@ class ArenaScene extends Phaser.Scene {
             fontStyle: "bold"
         });
 
-        this.add.rectangle(
-            690, 110, 180, 18, 0x555555
-        );
+        this.add.rectangle(690, 110, 180, 18, 0x555555);
 
         this.opponentHealthBar = this.add.rectangle(
             600, 110, 180, 18, 0x2ECC71
         );
 
         this.opponentHealthBar.setOrigin(0, 0.5);
-
 
         // VS DISPLAY
 
@@ -868,8 +753,7 @@ class ArenaScene extends Phaser.Scene {
             }
         ).setOrigin(0.5);
 
-
-        // STATUS MESSAGE
+        // STATUS
 
         this.statusText = this.add.text(
             400, 180,
@@ -880,7 +764,6 @@ class ArenaScene extends Phaser.Scene {
                 fontStyle: "bold"
             }
         ).setOrigin(0.5);
-
 
         // BLOCK INDICATOR
 
@@ -894,7 +777,6 @@ class ArenaScene extends Phaser.Scene {
             }
         ).setOrigin(0.5);
 
-
         // RESTART INSTRUCTION
 
         this.restartText = this.add.text(
@@ -905,19 +787,13 @@ class ArenaScene extends Phaser.Scene {
                 color: "#FFFFFF",
                 fontStyle: "bold",
                 backgroundColor: "#34394B",
-                padding: {
-                    x: 15,
-                    y: 10
-                }
+                padding: { x: 15, y: 10 }
             }
-        ).setOrigin(0.5);
-
-        this.restartText.setVisible(false);
-
+        ).setOrigin(0.5).setVisible(false);
 
         // CONTROL GUIDE
 
-        this.add.text(
+        this.controlGuide = this.add.text(
             400, 475,
             "A/D: MOVE   W: JUMP   S: BLOCK   J: PUNCH   K: KICK",
             {
@@ -926,90 +802,174 @@ class ArenaScene extends Phaser.Scene {
             }
         ).setOrigin(0.5);
 
-
-        // PAUSE MENU CONTROLS
+        // PAUSE MENU
 
         this.createPauseMenu();
-
 
         // BACKGROUND MUSIC
 
         this.musicNotes = [262, 330, 392, 330, 294, 349, 440, 349];
-
         this.musicIndex = 0;
 
         this.musicEvent = this.time.addEvent({
             delay: 350,
             loop: true,
             callback: () => {
-
-                if (!this.gameOver) {
-
+                if (!this.gameOver && !this.isPaused) {
                     const note = this.musicNotes[this.musicIndex];
 
                     playTone(note, 0.22, "square", 0.12);
 
                     this.musicIndex =
                         (this.musicIndex + 1) % this.musicNotes.length;
-
                 }
-
             }
         });
-
     }
 
+    // ======================================
+    // MOBILE TOUCH CONTROLS
+    // ======================================
+
+    createTouchControls() {
+        this.touchButtons = [];
+
+        const controls = [
+            { key: "left", label: "◀", x: 0.08, y: 0.87, hold: true },
+            { key: "right", label: "▶", x: 0.20, y: 0.87, hold: true },
+            { key: "block", label: "BLOCK", x: 0.43, y: 0.87, hold: true },
+            { key: "jump", label: "JUMP", x: 0.57, y: 0.87 },
+            { key: "punch", label: "PUNCH", x: 0.76, y: 0.87 },
+            { key: "kick", label: "KICK", x: 0.91, y: 0.87 }
+        ];
+
+        controls.forEach(control => {
+            const button = this.add.text(
+                800 * control.x,
+                500 * control.y,
+                control.label,
+                {
+                    fontSize: control.label.length > 3 ? "12px" : "24px",
+                    color: "#FFFFFF",
+                    backgroundColor: "#303844",
+                    padding: { x: 9, y: 12 },
+                    fontStyle: "bold"
+                }
+            );
+
+            button.setOrigin(0.5);
+            button.setScrollFactor(0);
+            button.setDepth(100);
+            button.setInteractive();
+
+            button.on("pointerdown", pointer => {
+                if (control.hold) {
+                    this.touchState[control.key] = true;
+                } else {
+                    this.touchAction(control.key);
+                }
+
+                button.setStyle({
+                    backgroundColor: "#D97725"
+                });
+
+                if (pointer.event) {
+                    pointer.event.preventDefault();
+                }
+            });
+
+            const release = () => {
+                if (control.hold) {
+                    this.touchState[control.key] = false;
+                }
+
+                button.setStyle({
+                    backgroundColor: "#303844"
+                });
+            };
+
+            button.on("pointerup", release);
+            button.on("pointerout", release);
+            button.on("pointerupoutside", release);
+
+            this.touchButtons.push(button);
+        });
+    }
+
+    touchAction(action) {
+        if (this.gameOver || this.isPaused) return;
+
+        if (action === "jump") {
+            const body = this.player.body;
+
+            if (
+                body.blocked.down ||
+                body.touching.down
+            ) {
+                body.setVelocityY(-500);
+            }
+        }
+
+        if (action === "punch") {
+            this.attack("punch");
+        }
+
+        if (action === "kick") {
+            this.attack("kick");
+        }
+    }
 
     // ======================================
-    // PAUSE MENU SYSTEM
+    // PAUSE MENU
     // ======================================
 
     createPauseMenu() {
-
         this.pauseButton = document.createElement("button");
         this.pauseButton.textContent = "Ⅱ PAUSE";
 
         this.pauseButton.style.cssText = `
-            position: fixed;
-            top: 18px;
-            right: 18px;
-            z-index: 10001;
-            padding: 10px 16px;
-            border: 2px solid #F5C542;
-            border-radius: 8px;
-            background: #202638;
-            color: #F5C542;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
+            position:fixed;
+            top:18px;
+            right:18px;
+            z-index:10001;
+            padding:10px 16px;
+            border:2px solid #ff9933;
+            border-radius:8px;
+            background:#202638;
+            color:#ff9933;
+            font-size:15px;
+            font-weight:bold;
+            cursor:pointer;
         `;
 
         this.pauseOverlay = document.createElement("div");
 
         this.pauseOverlay.style.cssText = `
-            position: fixed;
-            inset: 0;
-            z-index: 10002;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            background: rgba(10, 12, 25, 0.88);
-            font-family: Arial, sans-serif;
+            position:fixed;
+            inset:0;
+            z-index:10002;
+            display:none;
+            justify-content:center;
+            align-items:center;
+            background:rgba(10,12,25,0.88);
+            font-family:Arial,sans-serif;
         `;
 
         this.pauseOverlay.innerHTML = `
             <div style="
-                width: min(90%, 360px);
-                padding: 30px 24px;
-                box-sizing: border-box;
-                text-align: center;
-                background: #202638;
-                border: 2px solid #F5C542;
-                border-radius: 14px;
-                color: white;
-                box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+                width:min(90%,360px);
+                padding:30px 24px;
+                box-sizing:border-box;
+                text-align:center;
+                background:#202638;
+                border:2px solid #ff9933;
+                border-radius:14px;
+                color:white;
             ">
-                <h1 style="color:#F5C542; margin:0 0 10px;">GAME PAUSED</h1>
+
+                <h1 style="color:#ff9933; margin:0 0 10px;">
+                    GAME PAUSED
+                </h1>
 
                 <p style="margin:0 0 24px; color:#D7D9E0;">
                     Take a break, fighter.
@@ -1022,7 +982,7 @@ class ArenaScene extends Phaser.Scene {
                     padding:13px;
                     border:0;
                     border-radius:8px;
-                    background:#F5C542;
+                    background:#ff9933;
                     color:#171923;
                     font-size:16px;
                     font-weight:bold;
@@ -1042,55 +1002,46 @@ class ArenaScene extends Phaser.Scene {
                     font-weight:bold;
                     cursor:pointer;
                 ">MAIN MENU</button>
+
             </div>
         `;
 
         document.body.appendChild(this.pauseButton);
         document.body.appendChild(this.pauseOverlay);
 
-
-        // PAUSE BUTTON
+        // PAUSE
 
         this.pauseButton.addEventListener("click", () => {
-
             if (this.gameOver || this.isPaused) return;
 
             playSound("click");
 
             this.isPaused = true;
-
             this.pauseOverlay.style.display = "flex";
             this.pauseButton.style.display = "none";
 
             this.scene.pause();
-
         });
 
-
-        // RESUME BUTTON
+        // RESUME
 
         this.pauseOverlay
             .querySelector("#fightkaro-resume")
             .addEventListener("click", () => {
-
                 playSound("click");
 
                 this.pauseOverlay.style.display = "none";
                 this.pauseButton.style.display = "block";
 
                 this.isPaused = false;
-
                 this.scene.resume();
-
             });
 
-
-        // MAIN MENU BUTTON
+        // MAIN MENU
 
         this.pauseOverlay
             .querySelector("#fightkaro-main-menu")
             .addEventListener("click", () => {
-
                 playSound("click");
 
                 if (this.musicEvent) {
@@ -1099,10 +1050,6 @@ class ArenaScene extends Phaser.Scene {
 
                 this.pauseOverlay.style.display = "none";
 
-                this.pauseButton.remove();
-                this.pauseOverlay.remove();
-
-                // Stop and destroy the current Phaser game.
                 this.scene.stop();
 
                 if (game) {
@@ -1110,27 +1057,21 @@ class ArenaScene extends Phaser.Scene {
                     game = null;
                 }
 
-                // Hide the arena.
                 document.getElementById("game-container").style.display = "none";
 
-                // Hide character selection.
-                const characterSelection =
+                const selection =
                     document.getElementById("character-select");
 
-                if (characterSelection) {
-                    characterSelection.style.display = "none";
+                if (selection) {
+                    selection.style.display = "none";
                 }
 
-                // Show the main menu again.
-                document.querySelector(".menu").style.display = "block";
-
+                document.querySelector(".menu").style.display = "flex";
             });
 
-
-        // CLEANUP WHEN SCENE RESTARTS OR SHUTS DOWN
+        // CLEANUP
 
         this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-
             if (this.pauseButton) {
                 this.pauseButton.remove();
             }
@@ -1138,18 +1079,14 @@ class ArenaScene extends Phaser.Scene {
             if (this.pauseOverlay) {
                 this.pauseOverlay.remove();
             }
-
         });
-
     }
 
-
     // ======================================
-    // SPEECH BUBBLE SYSTEM
+    // SPEECH BUBBLES
     // ======================================
 
     showDialogue(side, category) {
-
         const isPlayer = side === "player";
 
         const dialogueText = isPlayer
@@ -1160,52 +1097,48 @@ class ArenaScene extends Phaser.Scene {
             ? "playerDialogueTimer"
             : "opponentDialogueTimer";
 
-        const fighter = isPlayer ? this.player : this.opponent;
+        const fighter = isPlayer
+            ? this.player
+            : this.opponent;
 
         if (!dialogueText || !fighter) return;
 
         dialogueText.setText(getRandomDialogue(category));
-
         dialogueText.setVisible(true);
 
-        dialogueText.setPosition(fighter.x, fighter.y - 125);
+        dialogueText.setPosition(
+            fighter.x,
+            fighter.y - 125
+        );
 
         if (this[timerName]) {
             this[timerName].remove();
         }
 
         this[timerName] = this.time.delayedCall(1700, () => {
-
             if (dialogueText.active) {
                 dialogueText.setVisible(false);
             }
-
         });
-
     }
-
 
     // ======================================
     // HEALTH BAR UPDATE
     // ======================================
 
     updateHealthBars() {
-
         this.playerHealthBar.scaleX =
             this.playerHealth / 100;
 
         this.opponentHealthBar.scaleX =
             this.opponentHealth / 100;
-
     }
-
 
     // ======================================
     // END MATCH
     // ======================================
 
     endMatch(result) {
-
         if (this.gameOver) return;
 
         this.gameOver = true;
@@ -1213,10 +1146,11 @@ class ArenaScene extends Phaser.Scene {
         this.player.body.setVelocity(0, 0);
         this.opponent.body.setVelocity(0, 0);
 
-        this.musicEvent.remove();
+        if (this.musicEvent) {
+            this.musicEvent.remove();
+        }
 
         if (result === "WIN") {
-
             this.showDialogue("player", "victory");
             this.showDialogue("opponent", "defeat");
 
@@ -1231,7 +1165,6 @@ class ArenaScene extends Phaser.Scene {
             playSound("win");
 
         } else {
-
             this.showDialogue("opponent", "victory");
             this.showDialogue("player", "defeat");
 
@@ -1244,23 +1177,24 @@ class ArenaScene extends Phaser.Scene {
             );
 
             playSound("lose");
-
         }
 
         this.restartText.setVisible(true);
-
     }
-
 
     // ======================================
     // PLAYER ATTACK
     // ======================================
 
     attack(type) {
+        if (this.gameOver || this.isPaused) return;
 
-        if (this.gameOver) return;
-
-        if (this.keys.S.isDown) return;
+        if (
+            this.keys.S.isDown ||
+            this.touchState.block
+        ) {
+            return;
+        }
 
         const now = this.time.now;
 
@@ -1284,19 +1218,15 @@ class ArenaScene extends Phaser.Scene {
         let name;
 
         if (type === "punch") {
-
             damage = 5;
             range = 85;
             knockback = 220;
             name = "PUNCH!";
-
         } else {
-
             damage = 10;
             range = 110;
             knockback = 400;
             name = "KICK!";
-
         }
 
         const distance =
@@ -1307,13 +1237,11 @@ class ArenaScene extends Phaser.Scene {
         const facingOpponent =
             distance * this.playerFacing > 0;
 
-
         if (
             inRange &&
             facingOpponent &&
             this.opponentHealth > 0
         ) {
-
             this.opponentHealth = Math.max(
                 0,
                 this.opponentHealth - damage
@@ -1334,11 +1262,9 @@ class ArenaScene extends Phaser.Scene {
             this.opponentSprite.setTint(0xFFFFFF);
 
             this.time.delayedCall(120, () => {
-
                 if (this.opponent.active && !this.gameOver) {
                     this.opponentSprite.clearTint();
                 }
-
             });
 
             this.statusText.setText(
@@ -1350,23 +1276,17 @@ class ArenaScene extends Phaser.Scene {
             }
 
         } else {
-
-            playSound("punch");
-
+            playSound(type);
             this.statusText.setText(name + " MISS!");
-
         }
-
     }
-
 
     // ======================================
     // OPPONENT AI
     // ======================================
 
     opponentAI() {
-
-        if (this.gameOver) return;
+        if (this.gameOver || this.isPaused) return;
 
         const now = this.time.now;
 
@@ -1375,34 +1295,31 @@ class ArenaScene extends Phaser.Scene {
         }
 
         const dx = this.player.x - this.opponent.x;
-
         const distance = Math.abs(dx);
 
         const opponentBody = this.opponent.body;
-
         const speed = 110;
 
         this.opponentFacing = dx > 0 ? 1 : -1;
 
-
         if (distance > 85) {
-
             opponentBody.setVelocityX(
                 this.opponentFacing * speed
             );
 
         } else {
-
             opponentBody.setVelocityX(0);
 
             if (now >= this.nextOpponentAttack) {
-
                 this.nextOpponentAttack = now + 1200;
 
                 this.showDialogue("opponent", "punch");
 
                 const blocking =
-                    this.keys.S.isDown &&
+                    (
+                        this.keys.S.isDown ||
+                        this.touchState.block
+                    ) &&
                     this.playerFacing ===
                     (this.opponent.x > this.player.x ? 1 : -1);
 
@@ -1415,16 +1332,15 @@ class ArenaScene extends Phaser.Scene {
 
                 this.updateHealthBars();
 
-                if (this.playerHealth <= 30 && !this.playerLowHealthSpoken) {
-
+                if (
+                    this.playerHealth <= 30 &&
+                    !this.playerLowHealthSpoken
+                ) {
                     this.playerLowHealthSpoken = true;
-
                     this.showDialogue("player", "lowHealth");
-
                 }
 
                 if (blocking) {
-
                     this.showDialogue("player", "block");
 
                     this.statusText.setText(
@@ -1434,7 +1350,6 @@ class ArenaScene extends Phaser.Scene {
                     playSound("block");
 
                 } else {
-
                     this.statusText.setText(
                         "OPPONENT ATTACK! -" + damage + " HP"
                     );
@@ -1452,100 +1367,77 @@ class ArenaScene extends Phaser.Scene {
                     this.playerSprite.setTint(0xFFFFFF);
 
                     this.time.delayedCall(120, () => {
-
                         if (this.player.active && !this.gameOver) {
                             this.playerSprite.clearTint();
                         }
-
                     });
-
                 }
-
 
                 if (this.playerHealth <= 0) {
                     this.endMatch("LOSE");
                 }
-
             }
-
         }
-
     }
-
 
     // ======================================
     // MAIN UPDATE LOOP
     // ======================================
 
     update() {
-
         if (
             this.gameOver &&
             Phaser.Input.Keyboard.JustDown(this.restartKey)
         ) {
-
             this.scene.restart();
-
             return;
-
         }
 
-        if (this.gameOver) return;
+        if (this.gameOver || this.isPaused) return;
 
         const now = this.time.now;
-
         const speed = 250;
 
         const body = this.player.body;
 
-        const blocking = this.keys.S.isDown;
-
+        const blocking =
+            this.keys.S.isDown ||
+            this.touchState.block;
 
         // BLOCK INDICATOR
 
-        if (blocking) {
-            this.blockText.setText("BLOCKING");
-        } else {
-            this.blockText.setText("");
-        }
-
+        this.blockText.setText(
+            blocking ? "BLOCKING" : ""
+        );
 
         // PLAYER MOVEMENT
 
         if (now < this.playerKnockbackUntil) {
-
-            // Physics controls knockback.
-
+            // Physics handles knockback.
         } else if (blocking) {
-
             body.setVelocityX(0);
-
         } else {
-
             body.setVelocityX(0);
 
             if (
                 this.keys.A.isDown ||
-                this.cursors.left.isDown
+                this.cursors.left.isDown ||
+                this.touchState.left
             ) {
-
                 body.setVelocityX(-speed);
                 this.playerFacing = -1;
 
             } else if (
                 this.keys.D.isDown ||
-                this.cursors.right.isDown
+                this.cursors.right.isDown ||
+                this.touchState.right
             ) {
-
                 body.setVelocityX(speed);
                 this.playerFacing = 1;
-
             }
-
         }
 
-
-        // JUMP
+        // KEYBOARD JUMP
 
         if (
             now >= this.playerKnockbackUntil &&
@@ -1556,54 +1448,43 @@ class ArenaScene extends Phaser.Scene {
                 Phaser.Input.Keyboard.JustDown(this.cursors.up)
             )
         ) {
-
             if (body.blocked.down || body.touching.down) {
                 body.setVelocityY(-500);
             }
-
         }
-
-
-        // PUNCH
-
-        if (Phaser.Input.Keyboard.JustDown(this.attackKeys.J)) {
-            this.attack("punch");
-        }
-
-
-        // KICK
-
-        if (Phaser.Input.Keyboard.JustDown(this.attackKeys.K)) {
-            this.attack("kick");
-        }
-
 
         // OPPONENT AI
 
         this.opponentAI();
 
+        // KEEP FIGHTER SPRITES ALIGNED
 
-        // KEEP VISIBLE PIXEL FIGHTERS ALIGNED WITH THEIR PHYSICS BODIES
+        this.playerSprite.setPosition(
+            this.player.x,
+            this.player.y + 60
+        );
 
-        this.playerSprite.setPosition(this.player.x, this.player.y + 60);
+        this.opponentSprite.setPosition(
+            this.opponent.x,
+            this.opponent.y + 60
+        );
 
-        this.opponentSprite.setPosition(this.opponent.x, this.opponent.y + 60);
+        this.playerSprite.setFlipX(
+            this.playerFacing < 0
+        );
 
-        this.playerSprite.setFlipX(this.playerFacing < 0);
+        this.opponentSprite.setFlipX(
+            this.opponentFacing > 0
+        );
 
-        this.opponentSprite.setFlipX(this.opponentFacing > 0);
-
-
-        // A subtle bob makes idle fighters feel less static.
+        // IDLE ANIMATION
 
         const bob = Math.sin(now / 180) * 1.5;
 
         this.playerSprite.y += bob;
-
         this.opponentSprite.y -= bob;
 
-
-        // KEEP NAME LABELS ABOVE FIGHTERS
+        // NAME LABELS
 
         this.playerNameText.setPosition(
             this.player.x,
@@ -1615,61 +1496,54 @@ class ArenaScene extends Phaser.Scene {
             this.opponent.y - 85
         );
 
-        if (this.playerDialogueText.visible) {
+        // DIALOGUE POSITIONS
 
+        if (this.playerDialogueText.visible) {
             this.playerDialogueText.setPosition(
                 this.player.x,
                 this.player.y - 125
             );
-
         }
 
         if (this.opponentDialogueText.visible) {
-
             this.opponentDialogueText.setPosition(
                 this.opponent.x,
                 this.opponent.y - 125
             );
-
         }
-
     }
-
 }
-
 
 // ======================================
 // GAME CONFIGURATION
 // ======================================
 
 const config = {
-
     type: Phaser.AUTO,
 
     width: 800,
-
     height: 500,
 
     parent: "game-container",
 
     backgroundColor: "#171923",
 
-    physics: {
+    scale: {
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH
+    },
 
+    physics: {
         default: "arcade",
 
         arcade: {
-
             gravity: {
                 y: 1000
             },
 
             debug: false
-
         }
-
     },
 
     scene: ArenaScene
-
 };
